@@ -77,14 +77,14 @@ func configDB(ctx context.Context) (*mongo.Database, error) {
 		ctx.Value(hostKey).(string),
 		ctx.Value(databaseKey).(string),
 	)
-	client, err := mongo.NewClient(options.Client().ApplyURI(uri))
+	Client, err := mongo.NewClient(options.Client().ApplyURI(uri))
 	if err != nil {
 		return nil, fmt.Errorf("couldn't connect to mongo: %v", err)
 	}
-	err = client.Connect(ctx)
+	err = Client.Connect(ctx)
 	if err != nil {
-		return nil, fmt.Errorf("mongo client couldn't connect with background context: %v", err)
+		return nil, fmt.Errorf("client couldn't connect with context: %v", err)
 	}
-	db := client.Database("appName")
+	db := Client.Database("appName")
 	return db, nil
 }
