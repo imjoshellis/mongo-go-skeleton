@@ -1,2 +1,2 @@
-# monGO
- Simple starting point for using MongoDB with Go
+# mongo-go-skeleton
+ A simple starting point for using MongoDB with Go
