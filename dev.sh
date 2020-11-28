@@ -1,0 +1,1 @@
+MONGO_HOST="localhost:27017" MONGO_USERNAME=myUserAdmin MONGO_PASSWORD=admin go run src/main.go
