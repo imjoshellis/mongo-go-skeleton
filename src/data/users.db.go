@@ -41,30 +41,25 @@ func init() {
 		log.Fatalf("Database configuration failed: %v", err)
 	}
 	Collection = db.Collection("users")
+
 	_, err = Collection.DeleteMany(ctx, bson.M{})
 	if err != nil {
 		log.Fatalf("Deleting users collection failed %v", err)
 	}
 	log.Warn("Users collection was reset! You probably don't want this to happen in production...")
-	_, err = Collection.Indexes().CreateOne(
-		ctx,
-		mongo.IndexModel{
-			Keys:    bson.D{{Key: "email", Value: 1}},
-			Options: options.Index().SetUnique(true),
-		},
-	)
-	if err != nil {
-		log.Fatalf("Failed to create unique index on emails", err)
-	}
-	_, err = Collection.Indexes().CreateOne(
-		ctx,
-		mongo.IndexModel{
-			Keys:    bson.D{{Key: "username", Value: 1}},
-			Options: options.Index().SetUnique(true),
-		},
-	)
-	if err != nil {
-		log.Fatalf("Failed to create unique index on usernames", err)
+
+	keys := []string{"email", "username"}
+	for _, k := range keys {
+		_, err = Collection.Indexes().CreateOne(
+			ctx,
+			mongo.IndexModel{
+				Keys:    bson.D{{Key: k, Value: 1}},
+				Options: options.Index().SetUnique(true),
+			},
+		)
+		if err != nil {
+			log.Fatalf("Failed to create unique index on %v: %v", k, err)
+		}
 	}
 
 	log.Info("Successfully connected to MongoDB")
